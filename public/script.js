@@ -1,5 +1,15 @@
 window.onload = function () {
   let tag = document.getElementById("result");
+  let btn = document.getElementById("btn-submit");
+  function setColor() {
+    if (btn.disabled == true) {
+      btn.style.backgroundColor = "gray";
+    } else {
+      btn.style.backgroundColor = "#6a64f1";
+    }
+  }
+
+  setColor();
 
   // Initialize variables
   let mouseSpeed = 0;
@@ -172,11 +182,48 @@ window.onload = function () {
       .then((data) => {
         console.log(data.prediction);
         if (data.prediction > 0.95) {
-            tag.innerHTML = "CAPTCHA VERIFIED";
-        }else if(data.prediction < 0.10){
-            tag.innerHTML = "ACCESS DENIED";
-        }else{
-            tag.innerHTML = "UNCERTAIN BEHAVIOUR";
+          tag.innerHTML = `<div
+              class="alert alert-success d-flex align-items-center"
+              role="alert"
+              style="width:30rem;"
+            >
+            <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+            <symbol id="check-circle-fill" viewBox="0 0 16 16">
+              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+            </symbol>
+            </svg>
+              <svg
+                class="bi flex-shrink-0 me-2"
+                style="height:20px; width:80px;"
+                role="img"
+                aria-label="Success:"
+              >
+                <use xlink:href="#check-circle-fill" />
+              </svg>
+              <div> Captcha Verified Successfully</div>
+            </div>`;
+
+          btn.disabled = false;
+          setColor();
+        } else if (data.prediction < 0.1) {
+          tag.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+  <symbol id="exclamation-triangle-fill" viewBox="0 0 16 16">
+    <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+  </symbol>
+</svg>
+<div class="alert alert-danger d-flex align-items-center" role="alert"
+style="width:30rem;">
+  <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Danger:"
+  style="height:20px; width:80px;"
+  ><use xlink:href="#exclamation-triangle-fill"/></svg>
+  <div>
+    Not Verified
+  </div>
+</div>
+`;
+          setColor();
+        } else {
+          tag.innerHTML = "UNCERTAIN BEHAVIOUR";
         }
       })
       .catch((error) => console.error("Error:", error));
